@@ -1,3 +1,15 @@
+# Ваш тест напряму зпихає в remove_phone рядкове значення номеру телефона, а мій метод опрацьовує не рядок, а клас Phone()
+# Ви ж зрівнюєте номер телефону (p.value) з усім екземпляром класса Phone (phone). Хіба що ось так.
+# def remove_phone(self, phone):
+#         for p in self.phones:
+#             if type(phone) is str:
+#                 del self.phones[self.phones.index(p)]
+#             elif p.value == phone.value:
+#                 del self.phones[self.phones.index(p)]
+#             else:
+#                 raise MyError2
+# Згоден у Вас запис кращий, але заглушка щоб тест парцював все одно потрібна. Для роботи скрипта вона ні в попередньому, 
+# ні в переробленому вигляді, не потрібна, навіть перевірка  p.value == phone для тесту не потрібна. 
 from collections import UserDict
 import re
 class MyError(Exception):
@@ -43,12 +55,13 @@ class Record:
             raise MyError
     
     def remove_phone(self, phone):
-        if type(phone) == str:  #Тупа заглушка щоб ваш тест працював
-            self.phones = [p for p in self.phones if p.value != phone] 
-        elif phone.value in [p.value for p in self.phones]:
-            self.phones = [p for p in self.phones if p.value != phone.value]
-        else:
-            raise MyError2
+        for p in self.phones:
+            if type(phone) is str and p.value == phone:
+                del self.phones[self.phones.index(p)]
+            elif p.value == phone.value:
+                del self.phones[self.phones.index(p)]
+            else:
+                raise MyError2
             
     def edit_phone(self, old_phone, new_phone):
         
